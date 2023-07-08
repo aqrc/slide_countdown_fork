@@ -16,6 +16,7 @@ class TextAnimation extends StatefulWidget {
     required this.textStyle,
     required this.slideDirection,
     required this.slideAnimationDuration,
+    this.maxValue = 9,
     this.curve = Curves.easeOut,
     this.countUp = true,
     this.digitsNumber,
@@ -24,6 +25,9 @@ class TextAnimation extends StatefulWidget {
 
   /// value A [ValueNotifier] that holds the integer value to be displayed.
   final ValueNotifier<int> value;
+
+  /// max value of the digit
+  final int maxValue;
 
   /// The text style to be used for the text.
   final TextStyle textStyle;
@@ -94,7 +98,7 @@ class _TextAnimationState extends State<TextAnimation>
   void _digit(int value) {
     if (currentValue != value) {
       nextValue = value;
-      if (value < 9) {
+      if (value < widget.maxValue) {
         currentValue = widget.countUp
             ? value < 1
                 ? value

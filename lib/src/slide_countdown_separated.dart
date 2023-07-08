@@ -56,6 +56,9 @@ class SlideCountdownSeparated extends SlideCountdownBase {
     super.shouldShowHours,
     super.shouldShowMinutes,
     super.shouldShowSeconds,
+    this.oneDigitPerBox = false,
+    this.distanceBetweenDigitBoxes = 0,
+    this.showDurationTitleUnder = false,
   });
 
   /// height to set the size of height each [Container]
@@ -67,6 +70,15 @@ class SlideCountdownSeparated extends SlideCountdownBase {
   /// [Container] will be the background of each a duration
   /// to decorate the [Container] on the [decoration] property
   final double width;
+
+  /// Whether or not to display each digit in a separate box
+  final bool oneDigitPerBox;
+
+  /// Distance between digit boxes
+  final double distanceBetweenDigitBoxes;
+
+  /// Whether or not to display duration title below the corresponding section
+  final bool showDurationTitleUnder;
 
   @override
   _SlideCountdownSeparatedState createState() =>
@@ -218,107 +230,128 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated>
 
         final isSeparatorTitle = widget.separatorType == SeparatorType.title;
 
-        final days = DigitSeparatedItem(
-          height: widget.height,
-          width: widget.width,
-          decoration: widget.decoration,
-          firstDigit: daysFirstDigitNotifier,
-          secondDigit: daysSecondDigitNotifier,
-          textStyle: widget.textStyle,
-          separatorStyle: widget.separatorStyle,
-          initValue: 0,
-          slideDirection: widget.slideDirection,
-          showZeroValue: widget.showZeroValue,
-          curve: widget.curve,
-          countUp: widget.countUp,
-          slideAnimationDuration: widget.slideAnimationDuration,
-          separatorPadding: widget.separatorPadding,
-          separator: widget.separatorType == SeparatorType.title
-              ? durationTitle.days
-              : separator,
-          textDirection: textDirection,
-          digitsNumber: widget.digitsNumber,
-          showSeparator: (showHours || showMinutes || showSeconds) ||
-              (isSeparatorTitle && showDays),
-        );
+        final daysWidget = showDays
+            ? DigitSeparatedItem(
+                height: widget.height,
+                width: widget.width,
+                decoration: widget.decoration,
+                firstDigit: daysFirstDigitNotifier,
+                secondDigit: daysSecondDigitNotifier,
+                textStyle: widget.textStyle,
+                separatorStyle: widget.separatorStyle,
+                initValue: 0,
+                slideDirection: widget.slideDirection,
+                showZeroValue: widget.showZeroValue,
+                curve: widget.curve,
+                countUp: widget.countUp,
+                slideAnimationDuration: widget.slideAnimationDuration,
+                separatorPadding: widget.separatorPadding,
+                separator: widget.separatorType == SeparatorType.title
+                    ? durationTitle.days
+                    : separator,
+                textDirection: textDirection,
+                digitsNumber: widget.digitsNumber,
+                showSeparator: (showHours || showMinutes || showSeconds) ||
+                    (isSeparatorTitle && showDays),
+                maxFirstDigitValue: 9,
+                oneDigitPerBox: widget.oneDigitPerBox,
+                distanceBetweenDigitBoxes: widget.distanceBetweenDigitBoxes,
+                showDurationTitleUnder: widget.showDurationTitleUnder,
+                title: durationTitle.days,
+              )
+            : SizedBox.shrink();
 
-        final hours = DigitSeparatedItem(
-          height: widget.height,
-          width: widget.width,
-          decoration: widget.decoration,
-          firstDigit: hoursFirstDigitNotifier,
-          secondDigit: hoursSecondDigitNotifier,
-          textStyle: widget.textStyle,
-          separatorStyle: widget.separatorStyle,
-          initValue: 0,
-          slideDirection: widget.slideDirection,
-          showZeroValue: widget.showZeroValue,
-          curve: widget.curve,
-          countUp: widget.countUp,
-          slideAnimationDuration: widget.slideAnimationDuration,
-          separatorPadding: widget.separatorPadding,
-          separator: widget.separatorType == SeparatorType.title
-              ? durationTitle.hours
-              : separator,
-          textDirection: textDirection,
-          digitsNumber: widget.digitsNumber,
-          showSeparator:
-              showMinutes || showSeconds || (isSeparatorTitle && showHours),
-        );
+        final hoursWidget = showHours
+            ? DigitSeparatedItem(
+                height: widget.height,
+                width: widget.width,
+                decoration: widget.decoration,
+                firstDigit: hoursFirstDigitNotifier,
+                secondDigit: hoursSecondDigitNotifier,
+                textStyle: widget.textStyle,
+                separatorStyle: widget.separatorStyle,
+                initValue: 0,
+                slideDirection: widget.slideDirection,
+                showZeroValue: widget.showZeroValue,
+                curve: widget.curve,
+                countUp: widget.countUp,
+                slideAnimationDuration: widget.slideAnimationDuration,
+                separatorPadding: widget.separatorPadding,
+                separator: widget.separatorType == SeparatorType.title
+                    ? durationTitle.hours
+                    : separator,
+                textDirection: textDirection,
+                digitsNumber: widget.digitsNumber,
+                maxFirstDigitValue: 2,
+                showSeparator: showMinutes ||
+                    showSeconds ||
+                    (isSeparatorTitle && showHours),
+                oneDigitPerBox: widget.oneDigitPerBox,
+                distanceBetweenDigitBoxes: widget.distanceBetweenDigitBoxes,
+                showDurationTitleUnder: widget.showDurationTitleUnder,
+                title: durationTitle.hours,
+              )
+            : SizedBox.shrink();
 
-        final minutes = DigitSeparatedItem(
-          height: widget.height,
-          width: widget.width,
-          decoration: widget.decoration,
-          firstDigit: minutesFirstDigitNotifier,
-          secondDigit: minutesSecondDigitNotifier,
-          textStyle: widget.textStyle,
-          separatorStyle: widget.separatorStyle,
-          initValue: 0,
-          slideDirection: widget.slideDirection,
-          showZeroValue: widget.showZeroValue,
-          curve: widget.curve,
-          countUp: widget.countUp,
-          slideAnimationDuration: widget.slideAnimationDuration,
-          separatorPadding: widget.separatorPadding,
-          separator: widget.separatorType == SeparatorType.title
-              ? durationTitle.minutes
-              : separator,
-          textDirection: textDirection,
-          digitsNumber: widget.digitsNumber,
-          showSeparator: showSeconds || (isSeparatorTitle && showMinutes),
-        );
+        final minutesWidget = showMinutes
+            ? DigitSeparatedItem(
+                height: widget.height,
+                width: widget.width,
+                decoration: widget.decoration,
+                firstDigit: minutesFirstDigitNotifier,
+                secondDigit: minutesSecondDigitNotifier,
+                textStyle: widget.textStyle,
+                separatorStyle: widget.separatorStyle,
+                initValue: 0,
+                slideDirection: widget.slideDirection,
+                showZeroValue: widget.showZeroValue,
+                curve: widget.curve,
+                countUp: widget.countUp,
+                slideAnimationDuration: widget.slideAnimationDuration,
+                separatorPadding: widget.separatorPadding,
+                separator: widget.separatorType == SeparatorType.title
+                    ? durationTitle.minutes
+                    : separator,
+                textDirection: textDirection,
+                digitsNumber: widget.digitsNumber,
+                showSeparator: showSeconds || (isSeparatorTitle && showMinutes),
+                maxFirstDigitValue: 5,
+                oneDigitPerBox: widget.oneDigitPerBox,
+                distanceBetweenDigitBoxes: widget.distanceBetweenDigitBoxes,
+                showDurationTitleUnder: widget.showDurationTitleUnder,
+                title: durationTitle.minutes,
+              )
+            : SizedBox.shrink();
 
-        final seconds = DigitSeparatedItem(
-          height: widget.height,
-          width: widget.width,
-          decoration: widget.decoration,
-          firstDigit: secondsFirstDigitNotifier,
-          secondDigit: secondsSecondDigitNotifier,
-          textStyle: widget.textStyle,
-          separatorStyle: widget.separatorStyle,
-          initValue: 0,
-          slideDirection: widget.slideDirection,
-          showZeroValue: widget.showZeroValue,
-          curve: widget.curve,
-          countUp: widget.countUp,
-          slideAnimationDuration: widget.slideAnimationDuration,
-          separatorPadding: widget.separatorPadding,
-          separator: widget.separatorType == SeparatorType.title
-              ? durationTitle.seconds
-              : separator,
-          textDirection: textDirection,
-          digitsNumber: widget.digitsNumber,
-          showSeparator: isSeparatorTitle && showSeconds,
-        );
-
-        final daysWidget = showDays ? days : const SizedBox.shrink();
-
-        final hoursWidget = showHours ? hours : const SizedBox.shrink();
-
-        final minutesWidget = showMinutes ? minutes : const SizedBox.shrink();
-
-        final secondsWidget = showSeconds ? seconds : const SizedBox.shrink();
+        final secondsWidget = showSeconds
+            ? DigitSeparatedItem(
+                height: widget.height,
+                width: widget.width,
+                decoration: widget.decoration,
+                firstDigit: secondsFirstDigitNotifier,
+                secondDigit: secondsSecondDigitNotifier,
+                textStyle: widget.textStyle,
+                separatorStyle: widget.separatorStyle,
+                initValue: 0,
+                slideDirection: widget.slideDirection,
+                showZeroValue: widget.showZeroValue,
+                curve: widget.curve,
+                countUp: widget.countUp,
+                slideAnimationDuration: widget.slideAnimationDuration,
+                separatorPadding: widget.separatorPadding,
+                separator: widget.separatorType == SeparatorType.title
+                    ? durationTitle.seconds
+                    : separator,
+                textDirection: textDirection,
+                digitsNumber: widget.digitsNumber,
+                showSeparator: isSeparatorTitle && showSeconds,
+                maxFirstDigitValue: 5,
+                oneDigitPerBox: widget.oneDigitPerBox,
+                distanceBetweenDigitBoxes: widget.distanceBetweenDigitBoxes,
+                showDurationTitleUnder: widget.showDurationTitleUnder,
+                title: durationTitle.seconds,
+              )
+            : const SizedBox.shrink();
 
         return Row(
           mainAxisSize: MainAxisSize.min,

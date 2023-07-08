@@ -30,6 +30,11 @@ abstract class BaseDigitsSeparated extends StatelessWidget {
     required this.textDirection,
     this.separatorPadding,
     this.digitsNumber,
+    required this.oneDigitPerBox,
+    required this.showDurationTitleUnder,
+    required this.distanceBetweenDigitBoxes,
+    required this.title,
+    required this.maxFirstDigitValue,
   });
 
   /// The height of the widget.
@@ -85,4 +90,18 @@ abstract class BaseDigitsSeparated extends StatelessWidget {
 
   /// {@macro override_digits}
   final OverrideDigits? digitsNumber;
+
+  /// Max possible value of first digit (e.g 5 for seconds, 2 for hours)
+  final int maxFirstDigitValue;
+
+  /// Whether or not to display each digit in a separate box
+  final bool oneDigitPerBox;
+
+  /// Distance between digit boxes
+  final double distanceBetweenDigitBoxes;
+
+  /// Whether or not to display duration title below the corresponding section
+  final bool showDurationTitleUnder;
+
+  final String title;
 }

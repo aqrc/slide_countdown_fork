@@ -21,6 +21,11 @@ class DigitSeparatedItem extends BaseDigitsSeparated {
     required super.showSeparator,
     super.separatorPadding,
     super.digitsNumber,
+    required super.oneDigitPerBox,
+    required super.showDurationTitleUnder,
+    required super.distanceBetweenDigitBoxes,
+    required super.title,
+    required super.maxFirstDigitValue,
   });
 
   @override
@@ -34,6 +39,7 @@ class DigitSeparatedItem extends BaseDigitsSeparated {
         : TextAnimation(
             slideAnimationDuration: slideAnimationDuration,
             value: firstDigit,
+            maxValue: maxFirstDigitValue,
             textStyle: textStyle,
             slideDirection: slideDirection,
             curve: curve,
@@ -63,35 +69,64 @@ class DigitSeparatedItem extends BaseDigitsSeparated {
       style: separatorStyle,
     );
 
-    final box = BoxSeparated(
+    final digitWidth = (width - distanceBetweenDigitBoxes) / 2;
+    final digits = [
+      Container(
+        width: digitWidth,
+        height: height,
+        decoration: oneDigitPerBox ? decoration : BoxDecoration(),
+        child: firstDigitWidget,
+      ),
+      SizedBox(width: distanceBetweenDigitBoxes),
+      Container(
+        width: digitWidth,
+        height: height,
+        decoration: oneDigitPerBox ? decoration : BoxDecoration(),
+        child: secondDigitWidget,
+      ),
+    ];
+
+    Widget box = BoxSeparated(
       height: height,
       width: width,
-      decoration: decoration,
+      decoration: oneDigitPerBox ? BoxDecoration() : decoration,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: textDirection.isRtl
-            ? [secondDigitWidget, firstDigitWidget]
-            : [
-                firstDigitWidget,
-                secondDigitWidget,
-              ],
+        children: textDirection.isRtl ? digits.reversed.toList() : digits,
       ),
     );
+
+    if (showDurationTitleUnder) {
+      box = Column(
+        children: [
+          box,
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final widgetsRow = [
+      box,
+      Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: separatorWidget,
+      ),
+    ];
 
     return Visibility(
       visible: showSeparator,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: textDirection.isRtl
-            ? [
-                separatorWidget,
-                box,
-              ]
-            : [
-                box,
-                separatorWidget,
-              ],
+        children:
+            textDirection.isRtl ? widgetsRow.reversed.toList() : widgetsRow,
       ),
       replacement: box,
     );
