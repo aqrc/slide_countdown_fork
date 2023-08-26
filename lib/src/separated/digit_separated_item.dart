@@ -116,7 +116,7 @@ class DigitSeparatedItem extends BaseDigitsSeparated {
     final widgetsRow = [
       box,
       Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
+        padding: separatorPadding ?? EdgeInsets.zero,
         child: separatorWidget,
       ),
     ];
